@@ -2,43 +2,39 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float speed = 1.0f;
+    public float moveSpeed = 1.0f;
     private Rigidbody2D rb;
-    Vector3 originalScale;
-    Animator animator;
+    private Vector2 movementInput;
+    private Animator animator;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        originalScale = transform.localScale;
-
-        animator = GetComponent<Animator>();
+        // Get the Rigidbody2D component attached to the player
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        float verticalValue = Input.GetAxisRaw("Vertical");
-        float horizontalValue = Input.GetAxisRaw("Horizontal");
-        if (horizontalValue != 0 || verticalValue != 0)
+        // Get input from the keyboard (e.g., A/D or Left/Right arrows)
+        // Input.GetAxisRaw provides sharp stop/start, useful for precise movement
+        movementInput.x = Input.GetAxisRaw("Horizontal");
+        movementInput.y = Input.GetAxisRaw("Vertical"); // For top-down movement
+    }
+
+    void FixedUpdate()
+    {
+        // Physics updates should be done in FixedUpdate
+        if (rb != null)
         {
+            // Calculate the target position
+                // Use Vector2 everywhere to avoid mixing Vector2 and Vector3 types
+            Vector2 targetPosition = rb.position + movementInput * moveSpeed * Time.fixedDeltaTime;
 
-            Vector3 deltaX = Vector3.right * (speed * horizontalValue * Time.deltaTime);
-            Vector3 deltaY = Vector3.up * (speed * verticalValue * Time.deltaTime);
-            Vector3 target = transform.position + deltaX + deltaY;
-
-            // check if the next position is inside the walkable area
-
-
-
-            float sign = 1;
-            if (horizontalValue < 0)
-                sign = -1;
-
-            transform.localScale = new Vector3(
-                sign * originalScale.x,
-                originalScale.y,
-                originalScale.z);
+            // Move the Rigidbody to the target position
+            // This method handles collisions with dynamic colliders
+            rb.MovePosition(targetPosition);
         }
     }
 }
