@@ -10,9 +10,14 @@ public class Player : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // Get the Rigidbody2D component attached to the player
-        rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
+    }
+
+    void OnValidate()
+    {
+        // Get components
+        if (rb  ==  null) rb = GetComponent<Rigidbody2D>();
+        if  (animator == null) animator = GetComponent<Animator>();
+            
     }
 
     void Update()
@@ -21,6 +26,11 @@ public class Player : MonoBehaviour
         // Input.GetAxisRaw provides sharp stop/start, useful for precise movement
         movementInput.x = Input.GetAxisRaw("Horizontal");
         movementInput.y = Input.GetAxisRaw("Vertical"); // For top-down movement
+        
+        // Player Flip
+        if (movementInput.x > 0) transform.localScale = new Vector2(1, 1);
+        if (movementInput.x < 0) transform.localScale = new Vector2(-1, 1);
+            
     }
 
     void FixedUpdate()
