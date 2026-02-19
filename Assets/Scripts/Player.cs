@@ -12,9 +12,9 @@ public class Player : MonoBehaviour
     {
     }
 
-    void OnValidate()
+    void Awake()
     {
-        // Get components
+        // Get components, same game objects components are called in awake.
         if (rb  ==  null) rb = GetComponent<Rigidbody2D>();
         if  (animator == null) animator = GetComponent<Animator>();
             
